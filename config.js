@@ -1,3 +1,4 @@
+// v2 - 2026 - Fixed: APK is new link, cache-busted
 // Already filled in for you - do not edit unless your Supabase project changes.
 window.NR_CONFIG = {
   SUPABASE_URL: "https://krlqpayefdohgzwbipav.supabase.co",
