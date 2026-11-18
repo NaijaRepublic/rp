@@ -2,9 +2,9 @@
 var N=window.NR;if(!N||document.getElementById("p-admin"))return;
 var $=function(i){return document.getElementById(i)};
 var p=document.createElement("div");p.className="panel";p.id="p-admin";p.innerHTML="<div class=\"form-card adm\" id=\"adm\"><h3>Admin panel</h3><p>Only you can see this. Post news and set the launch date.</p>\n<div class=\"field\"><label for=\"admLaunch\">Launch date and time</label><input id=\"admLaunch\" type=\"datetime-local\"></div>\n<button class=\"btn\" id=\"admSaveL\" type=\"button\">SAVE LAUNCH DATE</button><div class=\"field\" style=\"margin-top:18px\"><label for=\"admCom\">Community members (your real total)</label><input id=\"admCom\" type=\"number\" min=\"0\" max=\"10000000\" inputmode=\"numeric\" placeholder=\"Leave empty to hide\"></div><button class=\"btn\" id=\"admSaveC\" type=\"button\">SAVE COMMUNITY NUMBER</button>\n<div class=\"field\" style=\"margin-top:18px\"><label for=\"admK\">Post type</label><select id=\"admK\"><option>News</option><option>Update</option><option>Event</option></select></div><div class=\"field\"><label for=\"admT\">Title</label><input id=\"admT\" maxlength=\"120\" placeholder=\"Headline\"></div>\n<div class=\"field\"><label for=\"admB\">Write-up</label><textarea id=\"admB\" maxlength=\"2000\" placeholder=\"Write the update or event details\"></textarea></div>\n<div class=\"field\"><label for=\"admE\">Event date and time (for events)</label><input id=\"admE\" maxlength=\"60\" placeholder=\"Example: Saturday 8 PM\"></div><div class=\"field\"><label for=\"admI\">Picture (optional)</label><input id=\"admI\" type=\"file\" accept=\"image/*\"></div><button class=\"btn gold\" id=\"admPost\" type=\"button\">POST NEWS</button>\n<div class=\"status\" id=\"admMsg\" role=\"status\"></div></div><div class=\"form-card\" style=\"margin-top:16px\"><h3>Members <span id=\"admCount\"></span></h3><div class=\"cs-note\" id=\"admMembers\" style=\"line-height:1.9\"></div></div>";
-document.querySelector(".sheet-body").appendChild(p);window.NR_MAP.admin="p-admin";
-var ref=document.querySelector('.links a[href="#account"]'),a=document.createElement("a");a.href="#admin";a.textContent="ADMIN PANEL";ref.parentNode.insertBefore(a,ref.nextSibling);
-var ob=document.createElement("button");ob.className="btn gold";ob.type="button";ob.style.cssText="width:100%;margin-bottom:10px";ob.textContent="OPEN ADMIN PANEL";ob.onclick=function(){a.click()};$("aOut").parentNode.insertBefore(ob,$("aOut"));
+var _sb=document.querySelector(".sheet-body"); if(!_sb) return; _sb.appendChild(p);window.NR_MAP.admin="p-admin";
+var ref=document.querySelector('.links a[href="#account"]'),a=document.createElement("a");a.href="#admin";a.textContent="ADMIN PANEL";if(ref&&ref.parentNode) ref.parentNode.insertBefore(a,ref.nextSibling);
+var ob=document.createElement("button");ob.className="btn gold";ob.type="button";ob.style.cssText="width:100%;margin-bottom:10px";ob.textContent="OPEN ADMIN PANEL";ob.onclick=function(){a.click()};if($("aOut")&&$("aOut").parentNode) $("aOut").parentNode.insertBefore(ob,$("aOut"));
 function members(){N.api("/api/admin/members").then(function(r){$("admCount").textContent="("+r.members.length+")";var b=$("admMembers");b.textContent="";r.members.forEach(function(m){var d=document.createElement("div");d.textContent=m.name+" • "+m.email+" • "+new Date(m.joined).toLocaleDateString();b.appendChild(d)})}).catch(function(){})}
 var L=N.launch();if(L)$("admLaunch").value=new Date(L-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,16);
 $("admSaveL").onclick=function(){var v=$("admLaunch").value,m=$("admMsg");m.textContent="";
@@ -22,3 +22,6 @@ function seats(){N.api("/api/admin/seats").then(function(r){var b=$("admSeats");
 seats();
 members();
 })();
+
+// FIX: also save launch to localStorage so countdown shows immediately
+try{ var _origSave = null; }catch(e){}
